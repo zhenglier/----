@@ -3,6 +3,7 @@ package adapter;
 import io.IOFactory;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import io.DatabaseOutputStrategy;
 
 /**
  * 数据操作工厂类
@@ -20,7 +21,13 @@ public class DataOperationFactory {
     public static DataOperation createOperation(String type, String mode, JFrame parent, JTextArea textArea) {
         return switch (mode) {
             case "input" -> new InputAdapter(IOFactory.createInput(type, parent, textArea));
-            case "output" -> new OutputAdapter(IOFactory.createOutput(type, parent, textArea));
+            case "output" -> {
+                if (type.equals("database")) {
+                    yield new OutputAdapter(new DatabaseOutputStrategy());
+                } else {
+                    yield new OutputAdapter(IOFactory.createOutput(type, parent, textArea));
+                }
+            }
             default -> throw new IllegalArgumentException("Unknown mode: " + mode);
         };
     }

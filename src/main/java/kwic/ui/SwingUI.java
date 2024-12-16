@@ -238,6 +238,7 @@ public class SwingUI extends JFrame implements IndexObserver {
         }
         
         try {
+            // 创建数据库输出策略，传入连接信息
             DataOperation operation = DataOperationFactory.createOperation("database", "output", this, outputArea);
             operation.write(kwicService.generateIndex());
             
